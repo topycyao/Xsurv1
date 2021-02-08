@@ -1,0 +1,10 @@
+Package: Xsurv
+Type: Package
+Title: A package used to model survival data from advanced machine learning algorithms
+Version: 0.1.0
+Author: Kaiqiao Li, Sijie Yao
+Maintainer: The package maintainer <Sijie.Yaof@moffitt.org>
+Description: fit survival data with XGBoost and LightGBM.
+License:GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
