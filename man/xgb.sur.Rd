@@ -17,6 +17,40 @@ early_stopping_rounds=NULL
 \code{xgb.sur} is a function to model survival data using xgboost::xgb.cv and we add a new
 self-defined loss function to its original.
 }
+\arguments{
+  \item{datax}{
+data for covariates
+}
+  \item{datay}{
+data for survival time and events
+}
+  \item{method}{
+choose a loss function to be used,the default is "pl".
+}
+  \item{nfolds}{
+default is 5.
+}
+  \item{nround}{
+default is 1000
+}
+  \item{lambda}{
+L1 penalty parameter with default .01
+}
+  \item{alpha}{
+L2 penalty parameter with default .01
+}
+  \item{eta}{
+learning rate with default .01
+}
+  \item{early_stopping_rounds}{
+early stopping rounds with default 20
+}
+}
+
+\value{
+an objective of class \code{xgboost:xgb.cv}.
+}
+
 \examples{
 library(MASS)
 library(xgboost)
