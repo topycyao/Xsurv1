@@ -105,7 +105,7 @@ library(survcomp)
 #
  xgb_cox_m<-xgb.sur(x_train,y_train)
  xgb_cix_m<-xgb.sur(x_train,y_train,method = 'C')
-}
+
 XDtest <- xgb.DMatrix(x_test, label = y_test_boost)
 y_xgcox_predict <- -rowMeans(sapply(xgb_cox_m$models, predict, XDtest))
 y_xgcidx_predict <- -rowMeans(sapply(xgb_cix_m$models, predict, XDtest))
