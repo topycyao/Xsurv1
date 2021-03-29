@@ -12,4 +12,4 @@ devtools::install_github("topycyao/Xsurv")
 
 ## Reference
 
-Efficient gradient boosting for prognostic biomaker discovery.
+Li,K. et al. Efficient gradient boosting for prognostic biomaker discovery.
