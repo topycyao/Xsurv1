@@ -7,3 +7,6 @@ Please install from Github:
 devtools::install_github("topycyao/Xsurv")
 ```
 ## Examples
+
+
+## Reference
