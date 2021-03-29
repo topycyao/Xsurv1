@@ -26,8 +26,8 @@ xgb.sur<-function(datax,datay,method=c('defaut','pl','C'),nfolds=5,nround=NULL,
     early_stopping_rounds=20
 
   tt<-length(x_train[,1])
-  surv_time <- Surv(y$time,y$status)
-  y_train_boost <-  2 * y[,2] * (y[,1] - .5) #make fisrt col status and second col time
+
+  y_train_boost <-  2 * y$time * (y$status - .5) #make fisrt col status and second col time
   #y_train<-surv_time
   XDtrain <- xgb.DMatrix(x_train, label = y_train_boost)
   if(method=='C')
