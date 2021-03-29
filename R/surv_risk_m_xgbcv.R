@@ -9,17 +9,13 @@ library(survcomp)
 library(data.table)
 
 ####manully set risk level for train data
-surv_risk_m_xgbcv<-function(model,x_train,y_train,x_test,y_test){
-  #convert data to xgb data
+surv_risk_m_xgbcv<-function(model,x_train,x_test){
 
-  y_train_boost <-  2 * y_train$time * (y_train$status - .5)
-  y_test_boost <-  2 * y_test$time * (y_test$status - .5)
-  XDtrain <- xgb.DMatrix(x_train, label = y_train_boost)
   XDtest <- xgb.DMatrix(x_test, label = y_test_boost)
-  x_pred_cox <- as.data.frame(-rowMeans(sapply(model$models, predict, XDtrain)))
+  x_pred_cox <- as.data.frame(-rowMeans(sapply(model$models, predict, x_train)))
 
 
-  y_xgcox_predict<--rowMeans(sapply(model$models, predict, XDtest))
+  y_xgcox_predict<--rowMeans(sapply(model$models, predict, x_test))
 
   x_pred_cox_test <- as.data.frame(y_xgcox_predict)
 

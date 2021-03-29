@@ -84,12 +84,13 @@ library(survcomp)
 
  obs_time <- -(log(runif(n)))/(mu)
 
- a <- 2*rbinom(n = n, size = 1, prob = 1/3)
- b <- runif(n = n, min = 0, max = 2)
+ a <- 0.2*rbinom(n = n, size = 1, prob = 1/3)
+ b <- runif(n = n, min = 0, max = 0.2)
  a[a == 0] <- b[a == 0]
  C <- a
- obs_time <- pmin(obs_time, C)
  status <- as.numeric(obs_time <= C)
+ obs_time <- pmin(obs_time, C)
+
  surv_time <- Surv(obs_time, status)
  y<-cbind(status,obs_time)
  colnames(y)<-c('status','time')
