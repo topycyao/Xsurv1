@@ -101,6 +101,7 @@ x1=xgb_cox_m$models[[1]]
 # SHAP importance plot
 sh1=shap.plot.summary.wrap1(x1,x_train,top_n = 5)
 #sh2=shap.plot.summary.wrap1(l1,x_train,top_n = 5)
+sh1
 ```
 <p align="center">
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/xgb_plot.png?raw=true">
