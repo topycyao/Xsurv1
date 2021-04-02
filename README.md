@@ -103,7 +103,7 @@ sh1=shap.plot.summary.wrap1(x1,x_train,top_n = 5)
 sh2=shap.plot.summary.wrap1(l1,x_train,top_n = 5)
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/doc/figures/xgb_plot.png"/>
+  <img src = "https://github.com/topycyao/Xsurv/docs/figures/xgb_plot.png"/>
 </p>
 
 
