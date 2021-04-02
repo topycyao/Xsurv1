@@ -1,14 +1,5 @@
 
-library(class)
-library(MASS)
-library(xgboost)
-library(lightgbm)
-library(survival)
-library(dplyr)
-
-library(magrittr)
-library(survcomp)
-library(data.table)
+#Find survival risk with a xgboot or lightgbm model
 
 surv_risk_m<-function(model,train_data,test_data,lower,upper){
 
@@ -48,7 +39,7 @@ surv_risk_m<-function(model,train_data,test_data,lower,upper){
   #pred_x2_risk<-ris_tran(cl_pred_x2)
 
 
-  cl_pred<-knn(exp(pred_train),exp(pred_test),cl=cl2)
+  cl_pred<-class::knn(exp(pred_train),exp(pred_test),cl=cl2)
 
 
 

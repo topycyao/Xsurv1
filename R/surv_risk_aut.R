@@ -1,13 +1,4 @@
-library(class)
-library(MASS)
-library(xgboost)
-library(lightgbm)
-library(survival)
-library(dplyr)
 
-library(magrittr)
-library(survcomp)
-library(data.table)
 
 ###define risk automatically
 surv_risk_aut<-function(model,train_data,test_data){
@@ -39,7 +30,7 @@ surv_risk_aut<-function(model,train_data,test_data){
 
 
 
-  cl_pred<-knn(pred_train,pred_test,cl=r_test$cluster)
+  cl_pred<-class::knn(pred_train,pred_test,cl=r_test$cluster)
 
 
   pred_risk<-ris_tran(cl_pred)

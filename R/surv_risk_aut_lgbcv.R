@@ -1,16 +1,17 @@
-library(class)
-library(MASS)
-library(lightgbm)
-library(survival)
-library(dplyr)
-
-library(magrittr)
-library(survcomp)
-library(data.table)
-
-
+#' Fit survival risk
+#'
+#' This function allows you to find risk level automatically with lgbcv object.
+#' @param model Model to be applied
+#' @param x_train Xtrain data set
+#' @param y_trainl Ytrain data set
+#' @param x_test Xtest data set
+#' @param y_test Ytest data set
+#' @keywords Survival Risk
+#' @export
+#' @examples
+#' surv_risk_aut_lgbcv()
 surv_risk_aut_lgbcv<-function(model,x_train,y_train,x_test,y_test){
-  #convert data to lgb data
+
 
 
   y_train_boost <-  2 * y_train$time * (y_train$status - .5)
@@ -72,7 +73,7 @@ surv_risk_aut_lgbcv<-function(model,x_train,y_train,x_test,y_test){
 
 
 
-  cl_pred_l1<-knn(l_pred_cox,l_pred_cox_test,cl=r_test$cluster)
+  cl_pred_l1<-class::knn(l_pred_cox,l_pred_cox_test,cl=r_test$cluster)
 
 
   pred_l1_risk<-ris_tran(cl_pred_l1)

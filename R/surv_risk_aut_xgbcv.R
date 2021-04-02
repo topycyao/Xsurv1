@@ -1,12 +1,4 @@
-library(class)
-library(MASS)
-library(xgboost)
-library(survival)
-library(dplyr)
-
-library(magrittr)
-library(survcomp)
-library(data.table)
+#Find risk automatically with average prediction from xgb.cv object
 
 surv_risk_aut_xgbcv<-function(model,x_train,x_test){
   #convert data to xgb data
@@ -44,7 +36,7 @@ surv_risk_aut_xgbcv<-function(model,x_train,x_test){
   print(r_test$size)
 
 
-  cl_pred_x<-knn(x_pred_cox,x_pred_cox_test,cl=r_test$cluster)
+  cl_pred_x<-class::knn(x_pred_cox,x_pred_cox_test,cl=r_test$cluster)
 
 
   pred_x_risk<-ris_tran(cl_pred_x)

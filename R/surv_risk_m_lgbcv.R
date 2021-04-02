@@ -1,22 +1,8 @@
 #risk level
 ####
 
-##define risk manually
+###define risk manually with average prediction from lgb.cv object
 
-###define risk automatically with average prediction from xgb.cv object
-
-
-
-###define risk automatically with average prediction from lgb.cv object
-library(class)
-library(MASS)
-library(lightgbm)
-library(survival)
-library(dplyr)
-
-library(magrittr)
-library(survcomp)
-library(data.table)
 ###
 surv_risk_m_lgbcv<-function(model,x_train,y_train,x_test,y_test){
   #convert data to xgb data
@@ -76,7 +62,7 @@ surv_risk_m_lgbcv<-function(model,x_train,y_train,x_test,y_test){
 
 
 
-  cl_pred_l2<-knn((-l_pred_cox),(-l_pred_cox_test),cl=cl4)
+  cl_pred_l2<-class::knn((-l_pred_cox),(-l_pred_cox_test),cl=cl4)
 
 
   pfl2<-factor(cl_pred_l2,levels = c('High Risk','Medium Risk','Low Risk'))

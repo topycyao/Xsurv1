@@ -1,17 +1,7 @@
-library(class)
-library(MASS)
-library(xgboost)
-library(survival)
-library(dplyr)
-
-library(magrittr)
-library(survcomp)
-library(data.table)
-
-####manully set risk level for train data
+#Find Risk by manully setting risk level for train data
 surv_risk_m_xgbcv<-function(model,x_train,x_test){
 
-  XDtest <- xgb.DMatrix(x_test, label = y_test_boost)
+  XDtest <- xgboost::xgb.DMatrix(x_test, label = y_test_boost)
   x_pred_cox <- as.data.frame(-rowMeans(sapply(model$models, predict, x_train)))
 
 
@@ -43,7 +33,7 @@ surv_risk_m_xgbcv<-function(model,x_train,x_test){
 
 
 
-  cl_pred_x2<-knn(exp(-x_pred_cox),exp(-x_pred_cox_test),cl=cl2)
+  cl_pred_x2<-class::knn(exp(-x_pred_cox),exp(-x_pred_cox_test),cl=cl2)
 
 
   #pfx2<-factor(pred_x2_risk,levels = c('High Risk','Medium Risk','Low Risk'))

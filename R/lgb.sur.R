@@ -1,12 +1,4 @@
-library(MASS)
-library(lightgbm)
-library(survival)
-library(dplyr)
-library(magrittr)
-library(survcomp)
-library(data.table)
-#using xgboost with loss function of cox paritial likelihood or cindex
-source('R/loss_func.R')
+#Fit data with LGB model
 lgb.sur<-function(datax,datay,method=c('defaut','pl','C'),nfolds=5,nround=NULL,
                   lambda=NULL,alpha=NULL,eta=NULL,early_stopping_rounds=NULL
 )
@@ -31,11 +23,11 @@ lgb.sur<-function(datax,datay,method=c('defaut','pl','C'),nfolds=5,nround=NULL,
   #y_train<-surv_time
   LDtrain <- lgb.Dataset(x_train, label = y_train_boost)
   if(method=='C')
-    model<-lgb.cv(list(objective = cidx_lgb_obj,
+    model<-lightgbm::lgb.cv(list(objective = cidx_lgb_obj,
                        eta = eta, lambda = lambda, alpha = alpha, subsample = .5,
                        colsample_bytree = .5), LDtrain, nround = nround,eval=cidx_lgb_func,
                   nfold = nfolds, verbose = 0, early_stopping_rounds = early_stopping_rounds)
-  else    model<-lgb.cv(list(objective = Cox_lgb_obj,
+  else    model<-lightgbm::lgb.cv(list(objective = Cox_lgb_obj,
                              eta = eta, lambda = lambda, alpha = alpha, subsample = .5,
                              colsample_bytree = .5), LDtrain, nround = nround,eval=cidx_lgb_func,
                         nfold = nfolds, verbose = 0, early_stopping_rounds = early_stopping_rounds)

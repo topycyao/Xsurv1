@@ -5,6 +5,7 @@ Version: 0.1.0
 Author: Kaiqiao Li, Sijie Yao
 Maintainer: The package maintainer <Sijie.Yaof@moffitt.org>
 Description: fit survival data with XGBoost and LightGBM.
-License:GPL (>= 2)
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.1.1
