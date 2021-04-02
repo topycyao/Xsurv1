@@ -108,7 +108,7 @@ for (i in seq_len(5)) {
  y_lgcox_predict <- -rowMeans(y_lgcox_pred)
  y_lgcidx_predict <- -rowMeans(y_lgcidx_pred)
 
- validation cindex value
+ #validation cindex value
 cidx_result <- c( 'LGB_Cox' = concordance(y_test ~ y_lgcox_predict)$con,
                   'LGB_Cidx' = concordance(y_test ~ y_lgcidx_predict)$con)
 
