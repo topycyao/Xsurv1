@@ -9,16 +9,17 @@
 #' @export
 #' @examples
 #' sim_surv_lgb_tree(model,x_data,y_data)
-   sim_surv_lgb_tree<-function(model,x_data,y_data){
+   sim_surv_lgb_tree<-function(model,x_data,y_data,top_n=NULL){
      cnames<-colnames(x_data)
+     if(is.null(top_n)){top_n=3}
      imp<-lightgbm::lgb.importance(model,percentage = TRUE)
-     top_3<-imp[1:3,]
+     top_3<-imp[1:top_n,]
      top_3<-as.matrix(top_3)
      top_3<-as.vector(top_3)
-     idx1<-which(cnames==top_3[1])
-     idx2<-which(cnames==top_3[2])
-     idx3<-which(cnames==top_3[3])
-     idx<-c(idx1,idx2,idx3)
+     idx=rep(0,top_n)
+     for(i in 1:top_n){
+       idx[i]<-which(cnames==top_3[i])
+     }
      x_tree<-x_data[,idx]
      tree_data<-cbind(x_data,y_data)
      n_tree<-colnames(x_tree)
@@ -37,16 +38,17 @@
 #' @export
 #' @examples
 #' sim_surv_xgb_tree(model,x_data,y_data)
-   sim_surv_xgb_tree<-function(model,x_data,y_data){
+   sim_surv_xgb_tree<-function(model,x_data,y_data,top_n=NULL){
      cnames<-colnames(x_data)
+     if(is.null(top_n)){top_n=3}
      imp<-xgboost::xgb.importance(model,percentage = TRUE)
-     top_3<-imp[1:3,]
+     top_3<-imp[1:top_n,]
      top_3<-as.matrix(top_3)
      top_3<-as.vector(top_3)
-     idx1<-which(cnames==top_3[1])
-     idx2<-which(cnames==top_3[2])
-     idx3<-which(cnames==top_3[3])
-     idx<-c(idx1,idx2,idx3)
+     idx=rep(0,top_n)
+     for(i in 1:top_n){
+       idx[i]<-which(cnames==top_3[i])
+        }
      x_tree<-x_data[,idx]
      tree_data<-cbind(x_data,y_data)
      n_tree<-colnames(x_tree)

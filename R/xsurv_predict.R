@@ -11,7 +11,7 @@
 #' @examples
 #' xsurv_predict(model,x_train,y_train,x_test)
 
-xsurv_predict<-function(model,x_train,y_train,x_test,nc=25,nq=0.9)
+Xsurv_predict<-function(model,x_train,y_train,x_test,nc=25,nq=0.9)
 {
 
   l_pred=as.data.frame(-predict(model,x_train))

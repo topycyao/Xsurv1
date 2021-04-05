@@ -1,7 +1,7 @@
 
 #Find survival risk with a xgboot or lightgbm model
 
-surv_risk_m<-function(model,train_data,test_data,lower,upper){
+Xsurv_risk_m<-function(model,train_data,test_data,lower,upper){
 
   pred_train<-as.data.frame(predict(model,train_data))
   pred_test<-as.data.frame(predict(model,test_data))
