@@ -4,7 +4,7 @@
 \alias{sim_surv_xgb_tree}
 \title{Simple survival tree xgb}
 \usage{
-sim_surv_xgb_tree(model, x_data, y_data)
+sim_surv_xgb_tree(model, x_data, y_data, top_n = NULL)
 }
 \arguments{
 \item{model}{xgboot model object}

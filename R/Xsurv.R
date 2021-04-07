@@ -1,5 +1,25 @@
 #main function
-
+#'
+#' This function can fit the survival data with different model including xgboost,lightgbm,random forests, and gbm.
+#' @param datax X data set
+#' @param datay Y data set including time and event status
+#' @param top_n number of top features for survival tree fitting(avaliable for xgb and lgb)
+#' @param option model fitting option,defaut is xgb
+#' @param method fitting metohd,defaut is 'pl' means using loss function:coxph likelihood
+#' @param nfolds number of folds for crossvalidation
+#' @param number of rounds
+#' @param lambda l1 penalty parameter
+#' @param alpha l2 penalty parameter
+#' @param eta learning rate
+#' @param early_stopping_rounds force a stopping round
+#' @param gtree number of trees using in gbm model
+#' @param ncores number of cores using in gbm
+#' @param gfrac bag fraction in gbm with defaut 0.5
+#' @param gsh shrinkage paramter in gbm with defaut 0.001
+#' @param rfnsp number of splits in random forests
+#' @export
+#' @examples
+#' sim_surv_xgb_tree(model,x_data,y_data)
 
 Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf'),method=c('defaut','pl','C'),nfolds=5,
                 nround=NULL,lambda=NULL,alpha=NULL,eta=NULL,early_stopping_rounds=NULL,gtree=NULL,
@@ -66,42 +86,8 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     mod<-model$boosters[[k]]$booster
     cdx<-lgbcx[k]
     sp_tree<-sim_surv_lgb_tree(mod,x_train,datay,top_n)
-    }
 
-  if(option=='xgb'){
-  XDtrain <- xgboost::xgb.DMatrix(x_train, label = y_train_boost)
-  if(method=='C')
-    model<-xgboost::xgb.cv(list(objective = cidx_xgb_obj, eval_metric = cidx_xgb_func,
-                                tree_method = 'hist', grow_policy = 'lossguide',
-                                eta = eta, lambda = lambda, alpha = alpha, subsample = .5,
-                                colsample_bytree = .5), XDtrain, nround = nround,
-                           nfold = nfolds, verbose = F, early_stopping_rounds = early_stopping_rounds, maximize = T,
-                           callbacks = list(cb.cv.predict(T)))
-  else    model<-xgboost::xgb.cv(list(objective = 'survival:cox', eval_metric = cidx_xgb_func,
-                                      tree_method = 'hist', grow_policy = 'lossguide',
-                                      eta = eta, lambda = lambda, alpha = alpha, subsample = .5,
-                                      colsample_bytree = .5), XDtrain, nround = nround,
-                                 nfold = nfolds, verbose = F, early_stopping_rounds = early_stopping_rounds, maximize = T,
-                                 callbacks = list(cb.cv.predict(T)))
-
-  y_xgbcox_pred <- matrix(0, tt, nfolds)
-  for (i in seq_len(5)) {
-    y_xgbcox_pred[, i] <- -predict(model$models[[i]], x_train)
-
-  }
-  xgbcx<-rep(0,nfolds)
-
-  for(i in 1:5){
-    aa=(as.matrix(y_xgbcox_pred[,i]))
-    xgbcx[i]<-survival::concordance(y_train ~ aa)$con
-
-  }
-  k=which.max(xgbcx)
-  mod<-model$models[[k]]$
-  cdx<-lgbcx[k]
-  sp_tree<-sim_surv_xgb_tree(mod,x_train,datay,top_n)
-  }
-  if(option=='gbm'){
+    } else if(option=='gbm'){
 
     mod <- gbm::gbm(yy ~ .,       # formula
                 data = d_train,                 # dataset
@@ -118,16 +104,49 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
 
     y_gbm_predict <- exp(-predict(mod, newdata = d_train))
     cdx<-survival::concordance(y_train~y_gbm_predict)$con
-  }
-  if(option=='rf'){
+
+  } else if(option=='rf'){
     mod <- randomForestSRC::rfsrc(yy ~ ., data = d_train, nsplit = rfnsp,importance = TRUE)
     y_rf_predict <- predict(mod, d_train)$regrOutput$yy$predicted
     cdx<-survival::concordance(y_train ~ y_rf_predict)$con
 
-     }
+  } else  {
+    XDtrain <- xgboost::xgb.DMatrix(x_train, label = y_train_boost)
+    if(method=='C')
+      model<-xgboost::xgb.cv(list(objective = cidx_xgb_obj, eval_metric = cidx_xgb_func,
+                                  tree_method = 'hist', grow_policy = 'lossguide',
+                                  eta = eta, lambda = lambda, alpha = alpha, subsample = .5,
+                                  colsample_bytree = .5), XDtrain, nround = nround,
+                             nfold = nfolds, verbose = F, early_stopping_rounds = early_stopping_rounds, maximize = T,
+                             callbacks = list(cb.cv.predict(T)))
+    else    model<-xgboost::xgb.cv(list(objective = 'survival:cox', eval_metric = cidx_xgb_func,
+                                        tree_method = 'hist', grow_policy = 'lossguide',
+                                        eta = eta, lambda = lambda, alpha = alpha, subsample = .5,
+                                        colsample_bytree = .5), XDtrain, nround = nround,
+                                   nfold = nfolds, verbose = F, early_stopping_rounds = early_stopping_rounds, maximize = T,
+                                   callbacks = list(cb.cv.predict(T)))
+
+    y_xgbcox_pred <- matrix(0, tt, nfolds)
+    for (i in seq_len(5)) {
+      y_xgbcox_pred[, i] <- -predict(model$models[[i]], x_train)
+
+    }
+    xgbcx<-rep(0,nfolds)
+
+    for(i in 1:5){
+      aa=(as.matrix(y_xgbcox_pred[,i]))
+      xgbcx[i]<-survival::concordance(y_train ~ aa)$con
+
+    }
+    k=which.max(xgbcx)
+    mod<-model$models[[k]]$
+      cdx<-lgbcx[k]
+    sp_tree<-sim_surv_xgb_tree(mod,x_train,datay,top_n)
+  }
 
     ls<-list('model'=mod,'cindex'=cdx,'tree'=sp_tree)
     ls
-    }
+}
+
 
 

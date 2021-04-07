@@ -4,7 +4,7 @@
 \alias{sim_surv_lgb_tree}
 \title{Simple survival tree lgb}
 \usage{
-sim_surv_lgb_tree(model, x_data, y_data)
+sim_surv_lgb_tree(model, x_data, y_data, top_n = NULL)
 }
 \arguments{
 \item{model}{lightgbm model object}
