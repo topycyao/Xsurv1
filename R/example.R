@@ -1,0 +1,19 @@
+#example
+library(survival)
+library(Xsurv)
+data(lung)
+View(lung)
+mydata<-(lung[,-1])
+length(mydata[,1])
+datay_train<-mydata[1:180,c(1,2)]
+datax_train<-mydata[1:180,-c(1,2)]
+datay_test<-mydata[181:228,c(1,2)]
+datax_test<-mydata[181:228,-c(1,2)]
+xs<-Xsurv(datax_train,datay_train,top_n = 5)
+xm<-xs$mod
+xtree<-xs$tree
+x_ctree<-xtree$tree2
+plot(xctree)
+shap=xs$SHAP
+risk=xs$risk
+risk$km
