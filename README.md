@@ -1,6 +1,7 @@
 # Xsurv
 This package implements XGBoost and LightGBM in survival data with partiallikelihood function of cox ph model and smoothed C-index as loss functions.
-Additional survival information can be found with XGB and LGB models,including risk level, simple survival tree and etc. 
+gbm and random forests are also provided in Xsurv function to fit the model.
+Additional survival information can be found with XGB and LGB models,including simple survival tree,risk level and SHAP importance. 
 ## Installation
 
 Please install from Github:
