@@ -1,12 +1,13 @@
 #Find risk automatically with average prediction from xgb.cv object
 
 surv_risk_aut_xgbcv<-function(model,x_train,x_test){
-  #convert data to xgb data
+  x_train<-data.matrix(x_train)
+  x_test<-data.matrix(x_test)
 
-  x_pred_cox <- as.data.frame(-rowMeans(sapply(model$models, predict, x_train)))
+  x_pred_cox <- as.data.frame(-rowMeans(sapply(model$models, stats::predict, x_train)))
 
 
-  y_xgcox_predict<--rowMeans(sapply(model$models, predict, x_test))
+  y_xgcox_predict<--rowMeans(sapply(model$models, stats::predict, x_test))
 
   x_pred_cox_test <- as.data.frame(y_xgcox_predict)
 

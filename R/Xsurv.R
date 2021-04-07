@@ -34,7 +34,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
   option=match.arg(option)
   method=match.arg(method)
   sp_tree<-NULL
-
+  xsurv_shap<-NULL
   if(is.null(lambda))
     lambda=.01
   if(is.null(alpha))
@@ -87,6 +87,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     mod<-model$boosters[[k]]$booster
     cdx<-lgbcx[k]
     sp_tree<-sim_surv_lgb_tree(mod,x_train,datay,top_n)
+    sh=shap.plot.summary.wrap1(mod,xtrain,top_n = top_n)
 
     } else if(option=='gbm'){
 
@@ -143,9 +144,21 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     mod<-model$models[[k]]
       cdx<-lgbcx[k]
     sp_tree<-sim_surv_xgb_tree(mod,x_train,datay,top_n)
+    sh=shap.plot.summary.wrap1(mod,xtrain,top_n = top_n)
+
+
+
+
   }
 
-    ls<-list('model'=mod,'cindex'=cdx,'tree'=sp_tree)
+    xrisk<-surv_risk_aut(mod,datax,datax)
+    datay$risk<-factor(xrisk,levels=c('High Risk','Medium Risk','Low Risk'))
+    kmrisk<-survival::survfit(Surv(time,status)~risk,data=datay)
+    kr<-survminer::ggsurvplot(kmrisk,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3,
+                              legend=c(0.75,0.75),legend.title='',font.x=c(18,"plain","black"),
+                              font.y=c(18,"plain","black"))
+    risk<-list('fit'=kmrisk,'km'=kr,'data'=datay)
+    ls<-list('model'=mod,'cindex'=cdx,'tree'=sp_tree,'SHAP'=sh,'risk'=risk)
     ls
 }
 

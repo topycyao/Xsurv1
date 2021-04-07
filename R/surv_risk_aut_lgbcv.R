@@ -12,7 +12,8 @@
 #' surv_risk_aut_lgbcv()
 surv_risk_aut_lgbcv<-function(model,x_train,y_train,x_test,y_test){
 
-
+  x_train<-data.matrix(x_train)
+  x_test<-data.matrix(x_test)
 
   y_train_boost <-  2 * y_train$time * (y_train$status - .5)
   y_test_boost <-  2 * y_test$time * (y_test$status - .5)

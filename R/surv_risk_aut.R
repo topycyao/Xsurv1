@@ -2,17 +2,18 @@
 
 ###define risk automatically
 surv_risk_aut<-function(model,train_data,test_data){
-
+  train_data<-data.matrix(train_data)
+  test_data<-data.matrix(test_data)
   pred_train<-as.data.frame(-predict(model,train_data))
   pred_test<-as.data.frame(-predict(model,test_data))
-  cl1=kmeans(pred_train,3)
+  cl1=stats::kmeans(pred_train,3)
 
 
 
   center=cl1$centers
   risklevel<-sort(center)
 
-  r_test<-kmeans(pred_train,centers = risklevel)
+  r_test<-stats::kmeans(pred_train,centers = risklevel)
   ris_tran <- function(x) {
     k<-length(x)
     y<-rep(0,k)
@@ -36,7 +37,7 @@ surv_risk_aut<-function(model,train_data,test_data){
   pred_risk<-ris_tran(cl_pred)
 
 
-  prisk<-factor(pred_x1_risk,levels = c('High Risk','Medium Risk','Low Risk'))
+  prisk<-factor(pred_risk,levels = c('High Risk','Medium Risk','Low Risk'))
 
   return(prisk)
 
