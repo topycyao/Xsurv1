@@ -4,8 +4,6 @@
 #' @param model lightgbm model object
 #' @param x_data X data set
 #' @param y_data Y data set
-
-
 #' @export
 #' @examples
 #' sim_surv_lgb_tree(model,x_data,y_data)
@@ -21,12 +19,12 @@
        idx[i]<-which(cnames==top_3[i])
      }
      x_tree<-x_data[,idx]
-     tree_data<-cbind(x_data,y_data)
-     n_tree<-colnames(x_tree)
+
      yt<-survival::Surv(y_data$time,y_data$status)
-     fit<-partykit::ctree(yt~.,data=tree_data)
-     plot(fit)
-     fit
+     fit<-rpart::rpart(yt~.,data=x_tree)
+     tfit<-partykit::as.party(fit)
+     plot(tfit)
+     tfit
    }
 
 #' Simple survival tree xgb
@@ -41,7 +39,7 @@
    sim_surv_xgb_tree<-function(model,x_data,y_data,top_n=NULL){
      cnames<-colnames(x_data)
      if(is.null(top_n)){top_n=3}
-     imp<-xgboost::xgb.importance(model,percentage = TRUE)
+     imp<-xgboost::xgb.importance(cnames,model=model)
      top_3<-imp[1:top_n,]
      top_3<-as.matrix(top_3)
      top_3<-as.vector(top_3)
@@ -50,10 +48,9 @@
        idx[i]<-which(cnames==top_3[i])
         }
      x_tree<-x_data[,idx]
-     tree_data<-cbind(x_data,y_data)
-     n_tree<-colnames(x_tree)
      yt<-survival::Surv(y_data$time,y_data$status)
-     fit<-partykit::ctree(yt~.,data=tree_data)
-     plot(fit)
-     fit
+     fit<-rpart::rpart(yt~.,data=x_tree)
+     tfit<-partykit::as.party(fit)
+     plot(tfit)
+     tfit
    }

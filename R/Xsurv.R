@@ -25,6 +25,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
                 nround=NULL,lambda=NULL,alpha=NULL,eta=NULL,early_stopping_rounds=NULL,gtree=NULL,
                 ncores=NULL,gfrac=NULL,gsh=NULL,rfnsp=NULL)
 {
+
   x_train=datax
   y=datay
   d_train <- as.data.frame(x_train)
@@ -139,7 +140,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
 
     }
     k=which.max(xgbcx)
-    mod<-model$models[[k]]$
+    mod<-model$models[[k]]
       cdx<-lgbcx[k]
     sp_tree<-sim_surv_xgb_tree(mod,x_train,datay,top_n)
   }

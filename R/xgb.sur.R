@@ -3,7 +3,7 @@ xgb.sur<-function(datax,datay,method=c('defaut','pl','C'),nfolds=5,nround=NULL,
                   lambda=NULL,alpha=NULL,eta=NULL,early_stopping_rounds=NULL
 )
 {
-  x_train=datax
+  x_train=data.matrix(datax)
   y=datay
   method=match.arg(method)
   if(is.null(lambda))
