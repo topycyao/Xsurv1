@@ -15,5 +15,7 @@ Imports:
  lightgbm (>= 2.1),
  class,
  survival,
- partykit
+ partykit,
+ survminer,
+ rpart  
  
