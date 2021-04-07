@@ -23,8 +23,11 @@
      yt<-survival::Surv(y_data$time,y_data$status)
      fit<-rpart::rpart(yt~.,data=x_tree)
      tfit<-partykit::as.party(fit)
-     plot(tfit)
-     tfit
+     tfit1<-partykit::as.party(fit)
+     plot(tfit1)
+     tfit2<-partykit::ctree(yt~.,data=x_tree)
+     ls<-list('tree1'=tfit1,'tree2'=tfit2)
+     ls
    }
 
 #' Simple survival tree xgb
@@ -50,7 +53,9 @@
      x_tree<-x_data[,idx]
      yt<-survival::Surv(y_data$time,y_data$status)
      fit<-rpart::rpart(yt~.,data=x_tree)
-     tfit<-partykit::as.party(fit)
-     plot(tfit)
-     tfit
+     tfit1<-partykit::as.party(fit)
+     plot(tfit1)
+     tfit2<-partykit::ctree(yt~.,data=x_tree)
+     ls<-list('tree1'=tfit1,'tree2'=tfit2)
+     ls
    }
