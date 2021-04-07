@@ -4,9 +4,7 @@
 #' @param model lightgbm model object
 #' @param x_data X data set
 #' @param y_data Y data set
-#' @export
-#' @examples
-#' sim_surv_lgb_tree(model,x_data,y_data)
+
    sim_surv_lgb_tree<-function(model,x_data,y_data,top_n=NULL){
      cnames<-colnames(x_data)
      if(is.null(top_n)){top_n=3}
@@ -36,9 +34,7 @@
 #' @param model xgboot model object
 #' @param x_data X data set
 #' @param y_data Y data set
-#' @export
-#' @examples
-#' sim_surv_xgb_tree(model,x_data,y_data)
+
    sim_surv_xgb_tree<-function(model,x_data,y_data,top_n=NULL){
      cnames<-colnames(x_data)
      if(is.null(top_n)){top_n=3}

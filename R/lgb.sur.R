@@ -4,7 +4,7 @@ lgb.sur<-function(datax,datay,method=c('defaut','pl','C'),nfolds=5,nround=NULL,
 )
 {
   x_train=data.matrix(datax)
-  y=datay
+  y=as.data.frame(datay)
   method=match.arg(method)
   if(is.null(lambda))
     lambda=.01

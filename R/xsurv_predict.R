@@ -14,6 +14,8 @@
 Xsurv_predict<-function(model,x_train,y_train,x_test,nc=25,nq=0.9)
 {
 
+  train_data<-data.matrix(train_data)
+  test_data<-data.matrix(test_data)
   l_pred=as.data.frame(-predict(model,x_train))
   l_pred_test=as.data.frame(-predict(model,x_test))
 
