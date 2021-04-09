@@ -17,6 +17,15 @@
 #' @param gfrac bag fraction in gbm with defaut 0.5
 #' @param gsh shrinkage paramter in gbm with defaut 0.001
 #' @param rfnsp number of splits in random forests
+#' @import xgboost
+#' @import lightgbm
+#' @import rpart
+#' @import SHAPforxgboost
+#' @import partykit
+#' @import survival
+#' @import dplyr
+#' @export Xsurv
+#' @return a list object containing:model,cindex,tree,SHAP and risk
 
 
 Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf'),method=c('defaut','pl','C'),nfolds=5,
@@ -30,7 +39,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
   y_train=y$time
   d_train %<>% dplyr::mutate(yy = y)
   option=match.arg(option)
-  print(option)
+
   method=match.arg(method)
   sp_tree<-NULL
   xsurv_shap<-NULL
@@ -82,9 +91,9 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     mod<-model$boosters[[k]]$booster
     cdx<-lgbcx[k]
     sp_tree<-sim_surv_lgb_tree(mod,x_train,datay,top_n)
-    sh=shap.plot.summary.wrap1(mod,xtrain,top_n = top_n)
+    sh=sh=SHAPforxgboost::shap.plot.summary.wrap1(mod,x_train,top_n = top_n)
 
-    } else if(option=='gbm'){
+  } else if(option=='gbm'){
 
     mod <- gbm::gbm(yy ~ .,       # formula
                 data = d_train,                 # dataset
@@ -112,11 +121,13 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     if(method=='C')
       model<-xgb.sur(datax,datay,method = 'C',nfolds = nfolds,nround=nround,lambda=lambda,
                      alpha = alpha,early_stopping_rounds = early_stopping_rounds)
-    else      model<-lgb.sur(datax,datay,nfolds = nfolds,nround=nround,lambda=lambda,
+    else      model<-xgb.sur(datax,datay,nfolds = nfolds,nround=nround,lambda=lambda,
                              alpha = alpha,early_stopping_rounds = early_stopping_rounds)
 
     y_xgbcox_pred <- matrix(0, tt, nfolds)
+    x_train=data.matrix(x_train)
     for (i in seq_len(5)) {
+
       y_xgbcox_pred[, i] <- -predict(model$models[[i]], x_train)
 
     }
@@ -129,9 +140,9 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     }
     k=which.max(xgbcx)
     mod<-model$models[[k]]
-      cdx<-lgbcx[k]
-    sp_tree<-sim_surv_xgb_tree(mod,x_train,datay,top_n)
-    sh=shap.plot.summary.wrap1(mod,xtrain,top_n = top_n)
+    cdx<-lgbcx[k]
+    sp_tree<-sim_surv_xgb_tree(mod,x_train,y,top_n)
+    sh=SHAPforxgboost::shap.plot.summary.wrap1(mod,x_train,top_n = top_n)
 
 
 
@@ -139,12 +150,10 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
   }
 
     xrisk<-surv_risk_aut(mod,datax,datax)
-    datay$risk<-factor(xrisk,levels=c('High Risk','Medium Risk','Low Risk'))
-    kmrisk<-survival::survfit(Surv(time,status)~risk,data=datay)
-    kr<-survminer::ggsurvplot(kmrisk,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3,
-                              legend=c(0.75,0.75),legend.title='',font.x=c(18,"plain","black"),
-                              font.y=c(18,"plain","black"))
-    risk<-list('fit'=kmrisk,'km'=kr,'data'=datay)
+    y$risk<-factor(xrisk,levels=c('High Risk','Medium Risk','Low Risk'))
+    kmrisk<-survival::survfit(Surv(time,status)~risk,data=y)
+
+    risk<-list('fit'=kmrisk,'data'=datay)
     ls<-list('model'=mod,'cindex'=cdx,'tree'=sp_tree,'SHAP'=sh,'risk'=risk)
     ls
 }
