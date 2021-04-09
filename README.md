@@ -52,9 +52,13 @@ risk$km
 
 Risk analysis
 ```{r}
+library(survminer)
 risk=xs$risk
 #plot the kaplan-meier curve for different risk levels
-risk$km
+fit=risk$fit
+ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3,
+                          legend=c(0.75,0.75),legend.title='',font.x=c(18,"plain","black"),
+                           font.y=c(18,"plain","black"))
 ```
 <p align="center">
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png?raw=true">
