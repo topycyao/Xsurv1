@@ -30,6 +30,7 @@ xs<-Xsurv(datax_train,datay_train,top_n = 5)
 SHAP importance
 ```{r}
 shap=xs$SHAP
+shap
 ```
 <p align="center">
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/shaplung.png?raw=true">
@@ -48,16 +49,10 @@ xtree<-xs$tree
 ```{r}
 
 ###simplified tree created by ctree
-x_ctree<-xtree$tree2
-plot(xctree)
-shap=xs$SHAP
-risk=xs$risk
-risk$km
+#x_ctree<-xtree$tree2
+#plot(xctree)
 
 ```
-<p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/examplet2.png?raw=true">
-</p>
 
 Risk analysis
 ```{r}
