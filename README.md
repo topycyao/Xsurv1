@@ -21,6 +21,10 @@ datay_train<-mydata[,c(1,2)]
 datax_train<-mydata[,-c(1,2)]
 
 xs<-Xsurv(datax_train,datay_train,top_n = 5)
+#other options can be used 
+#xs_lgb<-Xsurv(datax_train,datay_train,option='lgb',method='C',top_n=5)
+#xs_gbm<-Xsurv(datax_train,datay_train,option='gbm')
+#xs_rf<-Xsurv(datax_train,datay_train,option='rf')
 
 
 ```
@@ -68,6 +72,17 @@ ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="500" height="400" >
 </p>
 
+Data generation
+```{r}
+sim_dat1<-Xsurv_sim_data(size=500,dim=20,lambda=2,vu=1,
+                         c_rate=0.3)
+sim_dat2<-Xsurv_sim_data(size=500,dim=20,lambda=2,vu=2,
+                         c_rate=0.3)    
+beta=c(rep(1,5),rep(0,15))
+sim_dat3<-Xsurv_sim_data(size=500,dim=20,lambda=2,vu=2,beta=beta,
+                         c_rate=0.3) 
+                         
+```
 ## Reference
 
 Li,K. et al. Efficient gradient boosting for prognostic biomaker discovery
