@@ -37,7 +37,8 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
   y=as.data.frame(datay)
   d_train <- as.data.frame(x_train)
   y_train=y$time
-  d_train %<>% dplyr::mutate(yy = y)
+  d_train$yy=y
+  yy=d_train$yy
   option=match.arg(option)
 
   method=match.arg(method)

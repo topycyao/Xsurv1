@@ -188,7 +188,7 @@ cidx_lgb_deviance_func <- function(preds, dtrain) {
 cidx_xgb_func <- function(preds, dtrain) {
   y_true <- xgboost::getinfo(dtrain, "label")
   censor <- as.numeric(y_true > 0)
-  surv_t <- Surv(abs(y_true), censor)
+  surv_t <- survival::Surv(abs(y_true), censor)
   return(list(metric = 'cidx', value = concordance(surv_t ~ preds)$con))
 }
 
@@ -196,6 +196,6 @@ cidx_xgb_func <- function(preds, dtrain) {
 cidx_lgb_func <- function(preds, dtrain) {
   y_true <- lightgbm::getinfo(dtrain, "label")
   censor <- as.numeric(y_true > 0)
-  surv_t <- Surv(abs(y_true), censor)
+  surv_t <- survival::Surv(abs(y_true), censor)
   return(list(name = 'cidx', value = concordance(surv_t ~ preds)$con, higher_better = T))
 }
