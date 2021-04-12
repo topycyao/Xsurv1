@@ -26,6 +26,15 @@ xs<-Xsurv(datax_train,datay_train,top_n = 5)
 ```
 ## model analysis
 
+
+SHAP importance
+```{r}
+shap=xs$SHAP
+```
+<p align="center">
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/shaplung.png?raw=true">
+</p>
+
 Suvival tree
 
 ```{r}
@@ -64,13 +73,6 @@ ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png?raw=true">
 </p>
 
-SHAP importance
-```{r}
-shap=xs$SHAP
-```
-<p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/shapxsurv.png?raw=true">
-</p>
 ## Reference
 
 Li,K. et al. Efficient gradient boosting for prognostic biomaker discovery
