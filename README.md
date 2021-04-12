@@ -43,7 +43,7 @@ xm<-xs$mod
 xtree<-xs$tree
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/exampletree.png?raw=true">
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/exampletree.png"  width="500" height="400">
 </p>
 
 ```{r}
@@ -65,7 +65,7 @@ ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3
                            font.y=c(18,"plain","black"))
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png?raw=true">
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="500" height="400" >
 </p>
 
 ## Reference
