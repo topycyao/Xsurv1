@@ -37,13 +37,13 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
   y=as.data.frame(datay)
   d_train <- as.data.frame(x_train)
   y_train=y$time
-  d_train$yy=y
-  yy=d_train$yy
+  yy<-survival::Surv(y_train,y$status)
+  d_train$yy=yy
   option=match.arg(option)
 
   method=match.arg(method)
   sp_tree<-NULL
-  xsurv_shap<-NULL
+  sh<-NULL
   if(is.null(lambda))
     lambda=.01
   if(is.null(alpha))
@@ -93,6 +93,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     cdx<-lgbcx[k]
     sp_tree<-sim_surv_lgb_tree(mod,x_train,datay,top_n)
     sh=sh=SHAPforxgboost::shap.plot.summary.wrap1(mod,x_train,top_n = top_n)
+    xrisk<-surv_risk_aut(mod,datax,datax)
 
   } else if(option=='gbm'){
 
@@ -109,13 +110,17 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
                 n.cores = 1
     )
 
-    y_gbm_predict <- exp(-predict(mod, newdata = d_train))
-    cdx<-survival::concordance(y_train~y_gbm_predict)$con
+    y_gbm_predict <- exp(predict(mod))
+
+    cdx<-survival::concordance(yy~y_gbm_predict)$con
+    xrisk<-surv_risk_aut_gbm(mod,datax,datax)
+
 
   } else if(option=='rf'){
     mod <- randomForestSRC::rfsrc(yy ~ ., data = d_train, nsplit = rfnsp,importance = TRUE)
     y_rf_predict <- predict(mod, d_train)$regrOutput$yy$predicted
-    cdx<-survival::concordance(y_train ~ y_rf_predict)$con
+    cdx<-survival::concordance(yy ~ y_rf_predict)$con
+    xrisk<-surv_risk_aut_rf(mod,datax,datax)
 
   } else  {
 
@@ -144,13 +149,13 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     cdx<-lgbcx[k]
     sp_tree<-sim_surv_xgb_tree(mod,x_train,y,top_n)
     sh=SHAPforxgboost::shap.plot.summary.wrap1(mod,x_train,top_n = top_n)
-
+    xrisk<-surv_risk_aut(mod,datax,datax)
 
 
 
   }
 
-    xrisk<-surv_risk_aut(mod,datax,datax)
+
     y$risk<-factor(xrisk,levels=c('High Risk','Medium Risk','Low Risk'))
     kmrisk<-survival::survfit(Surv(time,status)~risk,data=y)
 
