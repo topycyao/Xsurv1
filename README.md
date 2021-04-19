@@ -17,7 +17,7 @@ data(lung)
 View(lung)
 
 mydata<-(lung[,-1])
-mydata[,2]=mydata[,2]-1
+
 datay_train<-mydata[,c(1,2)]
 datax_train<-mydata[,-c(1,2)]
 
