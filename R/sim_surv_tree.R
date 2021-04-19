@@ -21,7 +21,7 @@
      x_tree<-as.data.frame(x_data[,idx])
 
      yt<-survival::Surv(y_data$time,y_data$status)
-     fit<-rpart::rpart(yt~.,data=x_tree)
+     fit<-rpart::rpart(yt~.,data=x_tree,control = rpart.control(maxdepth=4))
      tfit<-partykit::as.party(fit)
      tfit1<-partykit::as.party(fit)
      plot(tfit1)
@@ -37,21 +37,20 @@
 #' @param x_data X data set
 #' @param y_data Y data set
 
-   sim_surv_xgb_tree<-function(model,x_data,y_data,top_n=NULL){
+   sim_surv_xgb_tree<-function(model,x_data,y_data,top_nc=NULL){
      cnames<-colnames(x_data)
-     if(is.null(top_n)){top_n=3}
-     imp<-xgboost::xgb.importance(cnames,model=model)
-     top_3<-imp[1:top_n,]
-     top_3<-as.matrix(top_3)
-     top_3<-as.vector(top_3)
-     idx=rep(0,top_n)
-     for(i in 1:top_n){
-       idx[i]<-which(cnames==top_3[i])
+     xdata=as.matrix(x_data)
+     if(is.null(top_nc)){top_nc=3}
+     imp<-SHAPforxgboost::shap.values(model,xdata)$mean_shap_score
+     top_name<-names(imp)
+
+     idx=rep(0,top_nc)
+     for(i in 1:top_nc){
+        idx[i]<-which(cnames==top_name[i])
      }
-     print(idx)
      x_tree<-as.data.frame(x_data[,idx])
      yt<-survival::Surv(y_data$time,y_data$status)
-     fit<-rpart::rpart(yt~.,data=x_tree)
+     fit<-rpart::rpart(yt~.,data=x_tree,control = rpart.control(maxdepth=4))
      tfit1<-partykit::as.party(fit)
      plot(tfit1)
      tfit2<-partykit::ctree(yt~.,data=x_tree)
