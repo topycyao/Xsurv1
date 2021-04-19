@@ -15,8 +15,9 @@ library(survival)
 #fit the data 
 data(lung)
 View(lung)
-mydata<-(lung[,-1])
 
+mydata<-(lung[,-1])
+mydata[,2]=mydata[,2]-1
 datay_train<-mydata[,c(1,2)]
 datax_train<-mydata[,-c(1,2)]
 
@@ -59,8 +60,8 @@ risk=xs$risk
 #plot the kaplan-meier curve for different risk levels
 fit=risk$fit
 ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3,
-                          legend=c(0.75,0.75),legend.title='',font.x=c(18,"plain","black"),
-                           font.y=c(18,"plain","black"))
+                          legend=c(0.85,0.85),legend.title='',font.x=c(15,"plain","black"),
+                           font.y=c(18,"plain","black"),xlim=c(0,500))
 ```
 <p align="center">
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="500" height="400" >
