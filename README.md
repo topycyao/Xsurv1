@@ -72,7 +72,7 @@ ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=3
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="500" height="400" >
 </p>
 
-Data generation
+## Data generation
 ```{r}
 sim_dat1<-Xsurv_sim_data(size=500,dim=20,lambda=2,vu=1,
                          c_rate=0.3)
