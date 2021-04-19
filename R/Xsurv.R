@@ -159,7 +159,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     y$risk<-factor(xrisk,levels=c('High Risk','Medium Risk','Low Risk'))
     kmrisk<-survival::survfit(Surv(time,status)~risk,data=y)
 
-    risk<-list('fit'=kmrisk,'data'=datay)
+    risk<-list('fit'=kmrisk,'data'=y)
     ls<-list('model'=mod,'cindex'=cdx,'tree'=sp_tree,'SHAP'=sh,'risk'=risk)
     ls
 }
