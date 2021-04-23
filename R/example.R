@@ -4,6 +4,7 @@ library(Xsurv)
 data(lung)
 View(lung)
 mydata<-(lung[,-1])
+mydata[,2]<-mydata[,2]-1
 length(mydata[,1])
 names(mydata)<-colnames(mydata)
 datay_train<-mydata[1:180,c(1,2)]
