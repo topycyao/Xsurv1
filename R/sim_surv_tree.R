@@ -8,7 +8,7 @@
    sim_surv_tree<-function(model,x_data,y_data,top_nc=NULL){
      y_data=as.data.frame(y_data)
      cnames<-colnames(x_data)
-     xdata=as.matrix(x_data)
+     xdata=data.matrix(x_data)
      if(is.null(top_nc)){top_nc=3}
      imp<-SHAPforxgboost::shap.values(model,xdata)$mean_shap_score
      top_name<-names(imp)
@@ -39,7 +39,7 @@
 
    sim_surv_xgb_tree<-function(model,x_data,y_data,top_nc=NULL){
      cnames<-colnames(x_data)
-     xdata=as.matrix(x_data)
+     xdata=data.matrix(x_data)
      if(is.null(top_nc)){top_nc=3}
      imp<-SHAPforxgboost::shap.values(model,xdata)$mean_shap_score
      top_name<-names(imp)

@@ -6,6 +6,7 @@ surv_risk_aut<-function(model,train_data,test_data){
   test_data<-data.matrix(test_data)
   pred_train<-as.data.frame(-stats::predict(model,train_data))
   pred_test<-as.data.frame(-stats::predict(model,test_data))
+
   cl1=stats::kmeans(pred_train,3)
 
 
@@ -28,10 +29,11 @@ surv_risk_aut<-function(model,train_data,test_data){
 
     return(y)
   }
-
-
-
-  cl_pred<-class::knn(pred_train,pred_test,cl=r_test$cluster)
+  pred_train_lf<-leaf_tf(model,train_data)
+  pred_test_lf<-leaf_tf(model,test_data)
+  pred_train_lf<-as.data.frame(pred_train_lf)
+  pred_test_lf<-as.data.frame(pred_test_lf)
+  cl_pred<-class::knn(pred_train_lf,pred_test_lf,cl=r_test$cluster)
 
 
   pred_risk<-ris_tran(cl_pred)
@@ -47,8 +49,8 @@ surv_risk_aut<-function(model,train_data,test_data){
 surv_risk_aut_gbm<-function(model,train_data,test_data){
   train_data<-as.data.frame(train_data)
   test_data<-as.data.frame(test_data)
-  pred_train<-as.data.frame(-stats::predict(model,train_data))
-  pred_test<-as.data.frame(-stats::predict(model,test_data))
+  pred_train<-as.data.frame(-gbm::predict.gbm(model,train_data))
+  pred_test<-as.data.frame(-gbm::predict.gbm(model,test_data))
   cl1=stats::kmeans(pred_train,3)
 
 
@@ -90,8 +92,8 @@ surv_risk_aut_gbm<-function(model,train_data,test_data){
 surv_risk_aut_rf<-function(model,train_data,test_data){
   train_data<-as.data.frame(train_data)
   test_data<-as.data.frame(test_data)
-  pred_train<-as.data.frame(stats::predict(mod, train_data)$regrOutput$yy$predicted)
-  pred_test<-as.data.frame(stats::predict(mod, test_data)$regrOutput$yy$predicted)
+  pred_train<-as.data.frame(randomForestSRC::predict.rfsrc(mod, train_data)$regrOutput$yy$predicted)
+  pred_test<-as.data.frame(randomForestSRC::predict.rfsrc(mod, test_data)$regrOutput$yy$predicted)
   cl1=stats::kmeans(pred_train,3)
 
 
@@ -129,3 +131,5 @@ surv_risk_aut_rf<-function(model,train_data,test_data){
 
 
 }
+
+

@@ -35,10 +35,12 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
 
   x_train=as.data.frame(datax)
   y=as.data.frame(datay)
-  d_train <- as.data.frame(x_train)
-  y_train=y$time
-  yy<-survival::Surv(y_train,y$status)
-  d_train$yy=yy
+  d_train<-x_train
+  y_train=survival::Surv(y$time,y$status)
+  d_train<-magrittr::`%<>%`(d_train,dplyr::mutate(yy = y_train))
+  View(d_train)
+  yy<-y_train
+
   option=match.arg(option)
 
   method=match.arg(method)
@@ -75,7 +77,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     else   model<-lgb.sur(datax,datay,nfolds = nfolds,nround=nround,lambda=lambda,
                           alpha = alpha,early_stopping_rounds = early_stopping_rounds)
 
-
+    x_train=data.matrix(x_train)
     y_lgcox_pred <- matrix(0, tt, nfolds)
     for (i in 1:nfolds) {
       y_lgcox_pred[, i] <- -predict(model$boosters[[i]]$booster, x_train)
@@ -91,7 +93,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     k=which.max(lgbcx)
     mod<-model$boosters[[k]]$booster
     cdx<-lgbcx[k]
-    sp_tree<-sim_surv_lgb_tree(mod,x_train,datay,top_n)
+    sp_tree<-sim_surv_tree(mod,x_train,datay,top_n)
     sh=sh=SHAPforxgboost::shap.plot.summary.wrap1(mod,x_train,top_n = top_n)
     xrisk<-surv_risk_aut(mod,datax,datax)
 
@@ -110,17 +112,30 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
                 n.cores = 1
     )
 
-    y_gbm_predict <- exp(predict(mod))
+    y_gbm_predict <- exp(gbm::predict.gbm(mod))
 
     cdx<-survival::concordance(yy~y_gbm_predict)$con
     xrisk<-surv_risk_aut_gbm(mod,datax,datax)
 
 
   } else if(option=='rf'){
-    mod <- randomForestSRC::rfsrc(yy ~ ., data = d_train, nsplit = rfnsp,importance = TRUE)
-    y_rf_predict <- predict(mod, d_train)$regrOutput$yy$predicted
-    cdx<-survival::concordance(yy ~ y_rf_predict)$con
+    imp.d_train <- impute.rfsrc(yy ~ ., data = d_train, nsplit = rfnsp)
+    ncl=ncol(d_train)
+    imp.d_train[,ncl]=d_train[,ncl]
+
+
+    mod <- randomForestSRC::rfsrc(yy ~ ., data = imp.d_train, nsplit = rfnsp,importance = TRUE)
+    print(mod$n)
+    y_rf_predict <- randomForestSRC::predict.rfsrc(object=mod)
+
+    y_rf_predict1<-y_rf_predict$regrOutput$yy$predicted
+    print(length(y_rf_predict1))
+    cdx<-survival::concordance(yy ~ y_rf_predict1)$con
+
     xrisk<-surv_risk_aut_rf(mod,datax,datax)
+
+    print('here')
+
 
   } else  {
 
