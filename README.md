@@ -64,7 +64,7 @@ risk_data=risk$data
 fit=survival::survfit(Surv(time,status)~risk,data=risk_data)
 ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=2,
                           legend=c(0.85,0.85),legend.title='',font.x=c(15,"plain","black"),
-                           font.y=c(18,"plain","black"),xlim=c(0,800))
+                           font.y=c(18,"plain","black"))
 ```
 <p align="center">
   <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="500" height="400" >
