@@ -50,7 +50,7 @@ tr1<-xtree$tree1
 plot(tr1)
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/exampletree.png"  width="500" height="400">
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/exampletree.png"  width="500" height="500">
 </p>
 
 
