@@ -38,7 +38,7 @@ shap=xs$SHAP
 shap
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/shaplung.png" width="500" height="400">
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/shaplung.png" width="600" height="500">
 </p>
 
 Suvival tree
