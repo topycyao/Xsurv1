@@ -21,7 +21,7 @@ mydata<-(lung[,-1])
 datay_train<-mydata[,c(1,2)]
 datax_train<-mydata[,-c(1,2)]
 
-xs<-Xsurv(datax_train,datay_train,top_n = 4)
+xs<-Xsurv(datax_train,datay_train,top_n = 5)
 #other options can be used 
 #xs_lgb<-Xsurv(datax_train,datay_train,option='lgb',method='C',top_n=5)
 #xs_gbm<-Xsurv(datax_train,datay_train,option='gbm')
@@ -38,7 +38,7 @@ shap=xs$SHAP
 shap
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/shaplung.png" width="500" height="400">
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/shaplung.png" width="600" height="500">
 </p>
 
 Suvival tree
