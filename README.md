@@ -67,7 +67,7 @@ ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=2
                            font.y=c(18,"plain","black"))
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="500" height="400" >
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="800" height="800" >
 </p>
 
 ## Data generation
