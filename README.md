@@ -50,7 +50,7 @@ tr1<-xtree$tree1
 plot(tr1)
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/exampletree.png"  width="500" height="500">
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/exampletree.png"  width="500" height="300">
 </p>
 
 
@@ -67,7 +67,7 @@ ggsurvplot(fit,pval = TRUE,palette = c('coral','burlywood1','cadetblue1'),size=2
                            font.y=c(18,"plain","black"))
 ```
 <p align="center">
-  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="500" height="300" >
+  <img src = "https://github.com/topycyao/Xsurv/blob/master/docs%20/figures/kmrisk.png"  width="700" height="600" >
 </p>
 
 ## Data generation
