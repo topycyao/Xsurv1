@@ -30,7 +30,7 @@
 
 Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf'),method=c('defaut','pl','C'),nfolds=5,
                 nround=NULL,lambda=NULL,alpha=NULL,eta=NULL,early_stopping_rounds=NULL,gtree=NULL,
-                ncores=NULL,gfrac=NULL,gsh=NULL,rfnsp=NULL)
+                ncores=NULL,gfrac=NULL,gsh=NULL,rfnsp=NULL,cp=NULL,maxdpth=NULL)
 {
 
   x_train=as.data.frame(datax)
@@ -73,9 +73,11 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
 
     if(method=='C')
       model<-lgb.sur(datax,datay,method = 'C',nfolds = nfolds,nround=nround,lambda=lambda,
-                     alpha = alpha,early_stopping_rounds = early_stopping_rounds)
+                     alpha = alpha,eta=eta,
+                     early_stopping_rounds = early_stopping_rounds)
     else   model<-lgb.sur(datax,datay,nfolds = nfolds,nround=nround,lambda=lambda,
-                          alpha = alpha,early_stopping_rounds = early_stopping_rounds)
+                          alpha = alpha,eta=eta,
+                          early_stopping_rounds = early_stopping_rounds)
 
     x_train=data.matrix(x_train)
     y_lgcox_pred <- matrix(0, tt, nfolds)
@@ -93,7 +95,7 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     k=which.max(lgbcx)
     mod<-model$boosters[[k]]$booster
     cdx<-lgbcx[k]
-    sp_tree<-sim_surv_tree(mod,x_train,datay,top_n)
+    sp_tree<-sim_surv_tree(mod,x_train,datay,top_n,maxdpth,cp)
     sh=sh=SHAPforxgboost::shap.plot.summary.wrap1(mod,x_train,top_n = top_n)
     xrisk<-surv_risk_aut(mod,datax,datax)
 
@@ -141,8 +143,10 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
 
     if(method=='C')
       model<-xgb.sur(datax,datay,method = 'C',nfolds = nfolds,nround=nround,lambda=lambda,
+                     eta=eta,
                      alpha = alpha,early_stopping_rounds = early_stopping_rounds)
     else      model<-xgb.sur(datax,datay,nfolds = nfolds,nround=nround,lambda=lambda,
+                             eta=eta,
                              alpha = alpha,early_stopping_rounds = early_stopping_rounds)
 
     y_xgbcox_pred <- matrix(0, tt, nfolds)
@@ -154,15 +158,16 @@ Xsurv<-function(datax,datay,top_n=NULL,option=c('defaut','xgb','lgb','gbm','rf')
     }
     xgbcx<-rep(0,nfolds)
 
-    for(i in 1:5){
+    for(i in 1:nfolds){
       aa=(as.matrix(y_xgbcox_pred[,i]))
       xgbcx[i]<-survival::concordance(y_train ~ aa)$con
 
     }
+
     k=which.max(xgbcx)
     mod<-model$models[[k]]
-    cdx<-lgbcx[k]
-    sp_tree<-sim_surv_xgb_tree(mod,x_train,y,top_n)
+    cdx<-xgbcx[k]
+    sp_tree<-sim_surv_xgb_tree(mod,x_train,y,top_n,maxdpth,cp)
     sh=SHAPforxgboost::shap.plot.summary.wrap1(mod,x_train,top_n = top_n)
     xrisk<-surv_risk_aut(mod,datax,datax)
 

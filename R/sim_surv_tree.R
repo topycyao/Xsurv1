@@ -30,7 +30,9 @@
      plot(tfit1)
      tfit2<-partykit::ctree(yt~.,data=x_tree)
      ls<-list('tree1'=tfit1,'tree2'=tfit2)
+     print('ok')
      ls
+
    }
 
 #' Simple survival tree xgb
@@ -40,10 +42,11 @@
 #' @param x_data X data set
 #' @param y_data Y data set
 
-   sim_surv_xgb_tree<-function(model,x_data,y_data,top_nc=NULL){
+   sim_surv_xgb_tree<-function(model,x_data,y_data,top_nc=NULL,maxdp=NULL,cp=NULL){
      cnames<-colnames(x_data)
      xdata=data.matrix(x_data)
      if(is.null(top_nc)){top_nc=3}
+     if(is.null(maxdp)){maxdp=3}
      imp<-SHAPforxgboost::shap.values(model,xdata)$mean_shap_score
      top_name<-names(imp)
 
@@ -53,10 +56,12 @@
      }
      x_tree<-as.data.frame(x_data[,idx])
      yt<-survival::Surv(y_data$time,y_data$status)
-     fit<-rpart::rpart(yt~.,data=x_tree,control = rpart.control(maxdepth=4))
+     fit<-rpart::rpart(yt~.,data=x_tree,control = rpart.control(maxdepth=maxdp,cp=cp))
      tfit1<-partykit::as.party(fit)
      plot(tfit1)
+
      tfit2<-partykit::ctree(yt~.,data=x_tree)
      ls<-list('tree1'=tfit1,'tree2'=tfit2)
+
      ls
    }
